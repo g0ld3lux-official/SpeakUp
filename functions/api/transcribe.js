@@ -1,25 +1,35 @@
-export async function onRequestPost({ request, env }) {
-  if (!env.OPENAI_API_KEY) return json({ error: 'OPENAI_API_KEY is not configured.' }, 500);
-  const incoming = await request.formData();
-  const file = incoming.get('file');
-  if (!(file instanceof File)) return json({ error: 'No audio file received.' }, 400);
-  if (file.size > 25 * 1024 * 1024) return json({ error: 'Audio file is too large.' }, 413);
+export async function onRequestPost(context) {
+  try {
+    const formData = await context.request.formData();
+    const audio = formData.get("file");
 
-  const form = new FormData();
-  form.append('file', file, file.name || 'speech.webm');
-  form.append('model', 'gpt-4o-mini-transcribe');
-  form.append('response_format', 'json');
+    if (!audio) {
+      return Response.json(
+        { error: "No audio file received." },
+        { status: 400 }
+      );
+    }
 
-  const r = await fetch('https://api.openai.com/v1/audio/transcriptions', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${env.OPENAI_API_KEY}` },
-    body: form
-  });
-  const data = await r.json();
-  if (!r.ok) return json({ error: data?.error?.message || 'Transcription failed.' }, r.status);
-  return json({ text: data.text || '' });
-}
+    const audioBuffer = await audio.arrayBuffer();
 
-function json(body, status = 200) {
-  return new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
+    const result = await context.env.AI.run(
+      "@cf/openai/whisper",
+      {
+        audio: [...new Uint8Array(audioBuffer)]
+      }
+    );
+
+    return Response.json({
+      text: result.text || ""
+    });
+
+  } catch (error) {
+    return Response.json(
+      {
+        error: "Transcription failed.",
+        details: error.message
+      },
+      { status: 500 }
+    );
+  }
 }
