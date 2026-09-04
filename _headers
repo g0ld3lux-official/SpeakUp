@@ -1,0 +1,6 @@
+/*
+  SpeakUp security headers. Audio is sent only to the app's own API routes.
+*/
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin
+Permissions-Policy: microphone=(self)

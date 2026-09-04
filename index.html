@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#ffffff"><link rel="manifest" href="manifest.json"><title>SpeakUp</title><style>
+:root{--bg:#f7f7f5;--card:#fff;--ink:#151515;--muted:#777;--line:#e8e8e3;--soft:#f0f0eb;--good:#18794e}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.app{max-width:540px;margin:auto;min-height:100vh;padding:22px 18px 88px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}.logo{font-weight:900;font-size:24px}.avatar{width:40px;height:40px;border-radius:50%;background:#e6e6df;display:grid;place-items:center;font-weight:800}.screen{display:none}.screen.active{display:block}h1{font-size:30px;line-height:1.08;margin:0 0 8px}.muted{color:var(--muted)}.eyebrow{font-size:11px;font-weight:800;letter-spacing:.12em;color:#777}.hero{background:#171717;color:#fff;border-radius:25px;padding:23px;margin:22px 0}.hero h2{font-size:24px;margin:8px 0}.hero p{color:#ccc;line-height:1.5}.btn{width:100%;padding:14px 16px;border-radius:15px;font-weight:800;background:#171717;color:#fff}.hero .btn{background:#fff;color:#171717}.section{font-size:18px;font-weight:850;margin:25px 0 12px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.stat,.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px}.stat b{font-size:21px}.stat span{display:block;font-size:11px;color:#777;margin-top:3px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.card{cursor:pointer}.card .ico{font-size:24px}.card h3{margin:9px 0 5px}.card p{font-size:13px;color:#777;line-height:1.4;margin:0}.listbtn{width:100%;background:#fff;border:1px solid var(--line);border-radius:16px;text-align:left;padding:16px;margin:5px 0}.back{background:none;color:#777;padding:0 0 18px}.prompt{background:#fff;border:1px solid var(--line);border-radius:21px;padding:22px;font-size:20px;line-height:1.4;margin-top:15px}.timer{text-align:center;font-size:62px;font-weight:900;margin:25px 0}.mic{width:88px;height:88px;border-radius:50%;display:block;margin:15px auto;background:#171717;color:#fff;font-size:29px}.center{text-align:center}.score{text-align:center;font-size:62px;font-weight:900;margin:20px}.bar{height:8px;background:#e6e6e1;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:#171717}.row{display:flex;justify-content:space-between;margin:12px 0 6px;font-size:14px}.pill{display:inline-block;background:var(--soft);border-radius:99px;padding:8px 11px;margin:3px;font-size:12px}.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.96);border-top:1px solid var(--line);z-index:10}.navin{max-width:540px;margin:auto;display:flex;justify-content:space-around;padding:9px}.nav button{background:none;color:#777;font-size:11px}.nav button.active{color:#111;font-weight:800}.ni{font-size:21px;display:block;margin-bottom:2px}.notice{padding:12px 14px;border-radius:14px;background:#eef6f1;color:#176d46;font-size:13px;margin-top:14px}
+</style></head><body>
+<div class="app">
+<section id="home" class="screen active"><div class="top"><div class="logo">SpeakUp</div><div class="avatar">G</div></div><h1>Good evening, Gold.</h1><div class="muted">A little practice. A better speaker.</div>
+<div class="hero"><div class="eyebrow">TODAY'S CHALLENGE · 90 SEC</div><h2 id="dailyTitle">Do we need talent to succeed?</h2><p id="dailyDesc">Take a position and defend it with one strong example.</p><button class="btn" onclick="startChallenge()">Start speaking →</button></div>
+<div class="section">Your progress</div><div class="stats"><div class="stat"><b id="avg">8.0</b><span>Average</span></div><div class="stat"><b id="streak">3</b><span>Day streak</span></div><div class="stat"><b id="xp">420</b><span>XP</span></div></div>
+<div class="section">Practice</div><div class="grid">
+<div class="card" onclick="openPractice('Interview')"><div class="ico">💼</div><h3>Interview</h3><p>Practice answering under pressure.</p></div><div class="card" onclick="openPractice('Public speaking')"><div class="ico">🎤</div><h3>Public speaking</h3><p>Deliver ideas clearly.</p></div><div class="card" onclick="openPractice('Storytelling')"><div class="ico">📖</div><h3>Storytelling</h3><p>Build compelling stories.</p></div><div class="card" onclick="openPractice('Think fast')"><div class="ico">⚡</div><h3>Think fast</h3><p>Answer unexpected questions.</p></div></div></section>
+
+<section id="practice" class="screen"><div class="top"><div class="logo">Practice</div></div><h1>Choose a drill</h1><div class="muted">Every exercise is unlocked.</div>
+<button class="listbtn" onclick="startTopic('Should talent matter more than hard work?')">🎯 Daily challenge<br><small>90 sec · scored</small></button>
+<button class="listbtn" onclick="startTopic('Tell a story about a time you changed your mind.')">📖 Storytelling<br><small>90 sec · structure</small></button>
+<button class="listbtn" onclick="startTopic('Explain a difficult idea as if you were speaking to a ten-year-old.')">🧠 Explain it simply<br><small>60 sec · clarity</small></button>
+<button class="listbtn" onclick="startTopic('You have 30 seconds: should people be allowed to completely disconnect from social media?')">⚡ Think fast<br><small>30 sec · spontaneity</small></button>
+<div class="section">Simulators</div><button class="listbtn" onclick="sim('Interview')">💼 Interview simulator</button><button class="listbtn" onclick="sim('Negotiation')">🤝 Negotiation simulator</button><button class="listbtn" onclick="sim('Small talk')">💬 Small-talk simulator</button><button class="listbtn" onclick="sim('Sales')">📈 Sales simulator</button></section>
+
+<section id="session" class="screen"><button class="back" onclick="show('home')">← Back</button><div class="eyebrow">SPEAKING SESSION</div><div class="timer" id="timer">1:30</div><div class="prompt" id="prompt"></div><button class="mic" id="mic" onclick="toggleRecord()">🎙</button><div class="center muted" id="hint">Tap to begin. No interruptions.</div><div class="center muted" style="margin-top:12px;font-size:12px">Your recording is sent to the AI only to transcribe and score it; this app does not save the raw audio.</div><button class="btn" id="finish" style="display:none;margin-top:22px" onclick="finish()">Finish & get feedback</button></section>
+
+<section id="result" class="screen"><button class="back" onclick="show('home')">← Done</button><div class="eyebrow">SESSION COMPLETE</div><div class="score" id="score">8.0</div><div class="center muted">Strong communicator</div><div class="section">Your score</div>
+<div id="metrics"></div><div class="section">Coach's notes</div><div class="card"><b>What worked</b><p id="worked">You communicated a clear idea and supported it with an example.</p><b>Work on</b><p id="work">Try a short silent pause when moving between points instead of restarting your sentence.</p></div><div class="section">Next challenge</div><div class="card"><b>⚡ Think on your feet</b><p>You'll get a short preparation window before an unexpected question.</p></div></section>
+
+<section id="progress" class="screen"><div class="top"><div class="logo">Progress</div></div><h1>Your journey</h1><div class="muted">Build consistency, then build range.</div><div class="section">Stats</div><div class="stats"><div class="stat"><b id="pavg">8.0</b><span>Average</span></div><div class="stat"><b id="sessions">0</b><span>Sessions</span></div><div class="stat"><b id="pstreak">3</b><span>Streak</span></div></div><div class="section">Focus areas</div><div class="card"><span class="pill">Argumentation · strong</span><span class="pill">Vocabulary · strong</span><span class="pill">Fluency · improving</span><span class="pill">Filler words · focus</span></div><div class="section">Achievements</div><div class="grid"><div class="card">🔥<h3>First streak</h3><p>Practice 3 days in a row.</p></div><div class="card">🎤<h3>10 sessions</h3><p>Complete ten drills.</p></div><div class="card">⚡<h3>Quick thinker</h3><p>Complete a rapid drill.</p></div><div class="card">📖<h3>Storyteller</h3><p>Complete five stories.</p></div></div></section>
+
+<section id="profile" class="screen"><div class="top"><div class="logo">Profile</div><div class="avatar">G</div></div><h1>Gold</h1><div class="muted">Level 6 · Confident Communicator</div><div class="hero"><div class="eyebrow">CURRENT PATH</div><h2>Speak with confidence</h2><p>Clarity → fluency → persuasion → real-world communication</p></div><div class="section">Goals</div><div class="card"><span class="pill">Public speaking</span><span class="pill">Thinking quickly</span><span class="pill">Conversations</span><span class="pill">Interviews</span></div><div class="notice">☀️ Light mode · Everything is unlocked.</div></section>
+</div>
+<nav class="nav"><div class="navin"><button class="active" onclick="show('home',this)"><span class="ni">⌂</span>Home</button><button onclick="show('practice',this)"><span class="ni">◉</span>Practice</button><button onclick="show('progress',this)"><span class="ni">↗</span>Progress</button><button onclick="show('profile',this)"><span class="ni">○</span>Profile</button></div></nav>
+<script>
+const prompts=['Should talent matter more than hard work?','Is being good at communicating more important than being intelligent?','What is one thing you would change about modern life?','Should everyone learn how to speak in public?','Does failure teach people more than success?','Is creativity something you can learn?'];
+let seconds=90, initialSeconds=90, timerId=null, recording=false, mediaRecorder=null, chunks=[], startedAt=0, currentPrompt='', currentDuration=90;
+let sessionCount=Number(localStorage.getItem('sessions')||0), lastResult=null;
+const $=id=>document.getElementById(id);
+function show(id,btn){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');if(btn){document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));btn.classList.add('active')}window.scrollTo(0,0);if(id==='progress'){$('sessions').textContent=sessionCount; updateStats()}}
+function startChallenge(){startTopic($('dailyTitle').textContent)}
+function startTopic(t){currentPrompt=t;initialSeconds=t.includes('30 seconds')?30:(t.includes('60 seconds')?60:90);seconds=initialSeconds;currentDuration=initialSeconds;$('prompt').textContent=t;$('timer').textContent=fmt(seconds);$('hint').textContent='Tap to begin. No interruptions.';$('mic').textContent='🎙';$('finish').style.display='none';recording=false;chunks=[];show('session')}
+function fmt(s){return Math.floor(Math.max(0,s)/60)+':'+String(Math.max(0,s)%60).padStart(2,'0')}
+async function toggleRecord(){
+  if(recording){stopRecording();return}
+  if(!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder){$('hint').textContent='Your browser does not support in-browser recording. Try Safari or Chrome on a recent phone.';return}
+  try{
+    const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+    const mime=['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg'].find(x=>MediaRecorder.isTypeSupported(x))||'';
+    mediaRecorder=new MediaRecorder(stream,mime?{mimeType:mime}:undefined);chunks=[];startedAt=Date.now();
+    mediaRecorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+    mediaRecorder.onstop=()=>{stream.getTracks().forEach(t=>t.stop());processRecording()};
+    mediaRecorder.start();recording=true;$('mic').textContent='⏹';$('hint').textContent='Recording… speak naturally.';$('finish').style.display='block';
+    timerId=setInterval(()=>{seconds--;$('timer').textContent=fmt(seconds);if(seconds<=0)stopRecording()},1000);
+  }catch(e){$('hint').textContent='Microphone permission was not granted. Allow microphone access and try again.'}
+}
+function stopRecording(){if(!recording)return;clearInterval(timerId);recording=false;$('mic').textContent='🎙';$('hint').textContent='Processing your answer…';$('finish').style.display='none';if(mediaRecorder&&mediaRecorder.state!=='inactive')mediaRecorder.stop();else processRecording()}
+function finish(){stopRecording()}
+async function processRecording(){
+  const elapsed=Math.max(1,Math.round((Date.now()-startedAt)/1000)||Math.max(1,initialSeconds-seconds));
+  const blob=new Blob(chunks,{type:(chunks[0]?.type)||'audio/webm'});
+  if(!blob.size){showError('No audio was captured. Please try again.');return}
+  try{
+    const fd=new FormData();fd.append('file',blob,'speakup.webm');
+    const tr=await fetch('/api/transcribe',{method:'POST',body:fd});
+    const tj=await tr.json();if(!tr.ok)throw new Error(tj.error||'Transcription failed');
+    const ev=await fetch('/api/evaluate',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({prompt:currentPrompt,transcript:tj.text,durationSeconds:elapsed})});
+    const ej=await ev.json();if(!ev.ok)throw new Error(ej.error||'Evaluation failed');
+    lastResult={...ej,transcript:tj.text,durationSeconds:elapsed};saveSession(lastResult);renderResult(lastResult);show('result');
+  }catch(e){showError(e.message||'Something went wrong while getting feedback.')}
+}
+function showError(msg){$('hint').textContent=msg;$('finish').style.display='block';$('mic').textContent='🎙'}
+function saveSession(r){sessionCount++;localStorage.setItem('sessions',sessionCount);const history=JSON.parse(localStorage.getItem('speakupHistory')||'[]');history.unshift({date:new Date().toISOString(),prompt:currentPrompt,...r});localStorage.setItem('speakupHistory',JSON.stringify(history.slice(0,50)));const oldXp=Number(localStorage.getItem('xp')||420);localStorage.setItem('xp',String(oldXp+Math.max(10,Math.round((r.overall||5)*10))))}
+function renderResult(r){
+  $('score').textContent=Number(r.overall||0).toFixed(1);$('worked').textContent=(r.strengths||['You completed the exercise.']).join(' ');$('work').textContent=(r.improvements||['Keep practicing and aim for clearer transitions.']).join(' ');
+  const data=[['Clarity',r.clarity],['Structure',r.structure],['Fluency',r.fluency],['Vocabulary',r.vocabulary],['Conciseness',r.conciseness],['Argument development',r.argument]];
+  $('metrics').innerHTML=data.map(x=>`<div class="row"><span>${x[0]}</span><b>${Number(x[1]||0).toFixed(1)}</b></div><div class="bar"><i style="width:${Math.max(0,Math.min(100,Number(x[1]||0)*10))}%"></i></div>`).join('')+
+    `<div class="card" style="margin-top:14px"><b>Speech stats</b><p>Approx. ${Number(r.wordsPerMinute||0).toFixed(0)} words/min · ${r.fillerCount||0} filler word${r.fillerCount==1?'':'s'}</p><p class="muted">${r.summary||''}</p><p><b>Transcript</b><br>${escapeHtml(r.transcript||'')}</p></div>`;
+}
+function escapeHtml(x){return String(x).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function updateStats(){const h=JSON.parse(localStorage.getItem('speakupHistory')||'[]');const avg=h.length?h.reduce((a,x)=>a+Number(x.overall||0),0)/h.length:8;$('pavg').textContent=avg.toFixed(1);$('avg').textContent=avg.toFixed(1);$('xp').textContent=localStorage.getItem('xp')||'420'}
+function openPractice(type){startTopic(type+' practice: '+prompts[Math.floor(Math.random()*prompts.length)])}
+function sim(type){currentPrompt=type+' simulator';$('prompt').textContent=type+' simulator: '+(type==='Interview'?'Tell me about yourself and what you are working toward.':type==='Negotiation'?'You need to convince someone to accept your proposal. Make your opening case.':type==='Small talk'?'You just met someone at an event. Start a natural conversation.':'Convince a potential customer that your idea solves a real problem.');seconds=90;initialSeconds=90;$('timer').textContent='1:30';show('session')}
+updateStats();
+</script></body></html>
