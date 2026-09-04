@@ -1,57 +1,56 @@
-export async function onRequestPost({ request, env }) {
-  if (!env.OPENAI_API_KEY) return json({ error: 'OPENAI_API_KEY is not configured.' }, 500);
-  const body = await request.json().catch(() => null);
-  if (!body?.transcript) return json({ error: 'Transcript is required.' }, 400);
+export async function onRequestPost(context) {
+  try {
+    const { transcript, duration } = await context.request.json();
 
-  const prompt = `You are SpeakUp, a supportive speaking coach for a teenager. Grade the response to the prompt below. Be fair rather than harsh. Do not compare the speaker to other people and do not comment on physical appearance. Focus only on communication skill.
+    if (!transcript) {
+      return Response.json(
+        { error: "No transcript provided." },
+        { status: 400 }
+      );
+    }
 
-PROMPT: ${body.prompt || 'Open speaking practice'}
-TRANSCRIPT: ${body.transcript}
-DURATION_SECONDS: ${Number(body.durationSeconds) || 0}
+    const prompt = `
+You are an expert speaking coach.
 
-Return ONLY JSON matching the supplied schema. Scores are integers from 0 to 10. Give concise, useful feedback. Mention strengths and the 2-3 highest-value improvements. If duration is available, calculate approximate words per minute from transcript word count / duration. Detect common fillers such as um, uh, like, you know, basically, literally, so, I mean; do not count normal uses of words such as 'like' when clearly not filler.`;
+Evaluate this speech transcript.
 
-  const schema = {
-    type: 'object',
-    additionalProperties: false,
-    properties: {
-      overall: { type: 'integer' },
-      clarity: { type: 'integer' },
-      structure: { type: 'integer' },
-      vocabulary: { type: 'integer' },
-      argument: { type: 'integer' },
-      conciseness: { type: 'integer' },
-      fluency: { type: 'integer' },
-      wordsPerMinute: { type: 'number' },
-      fillerCount: { type: 'integer' },
-      fillers: { type: 'array', items: { type: 'string' } },
-      strengths: { type: 'array', items: { type: 'string' } },
-      improvements: { type: 'array', items: { type: 'string' } },
-      summary: { type: 'string' }
-    },
-    required: ['overall','clarity','structure','vocabulary','argument','conciseness','fluency','wordsPerMinute','fillerCount','fillers','strengths','improvements','summary']
-  };
+SPEECH:
+${transcript}
 
-  const r = await fetch('https://api.openai.com/v1/responses', {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${env.OPENAI_API_KEY}`, 'content-type': 'application/json' },
-    body: JSON.stringify({
-      model: env.OPENAI_MODEL || 'gpt-5.6-luna',
-      store: false,
-      input: prompt,
-      text: { format: { type: 'json_schema', name: 'speaking_evaluation', strict: true, schema } }
-    })
-  });
-  const data = await r.json();
-  if (!r.ok) return json({ error: data?.error?.message || 'AI evaluation failed.' }, r.status);
-  const text = data.output_text || extractOutputText(data);
-  try { return json(JSON.parse(text)); }
-  catch { return json({ error: 'The AI returned an unreadable evaluation.' }, 502); }
+SPEAKING TIME:
+${duration || "unknown"} seconds
+
+Return ONLY valid JSON with this exact structure:
+
+{
+  "overall": 0,
+  "clarity": 0,
+  "structure": 0,
+  "fluency": 0,
+  "vocabulary": 0,
+  "conciseness": 0,
+  "argument": 0,
+  "strengths": ["", ""],
+  "improvements": ["", ""],
+  "summary": ""
 }
 
-function extractOutputText(data) {
-  return (data.output || []).flatMap(x => x.content || []).filter(x => x.type === 'output_text').map(x => x.text).join('');
-}
-function json(body, status = 200) {
-  return new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } });
+Scores must be from 1 to 10.
+
+Judge the actual content and delivery evidence in the transcript.
+Do not invent things that cannot be determined from the transcript.
+`;
+
+    const result = await context.env.AI.run(
+      "@cf/meta/llama-3.1-8b-instruct",
+      { prompt }
+    );
+
+    return Response.json(result);
+  } catch (error) {
+    return Response.json(
+      { error: "AI evaluation failed.", details: error.message },
+      { status: 500 }
+    );
+  }
 }
