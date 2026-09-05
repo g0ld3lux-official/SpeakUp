@@ -45,7 +45,7 @@
     </button>
   </div>
 </section>
-<section id="home" class="screen active"><div class="top"><div class="logo">SpeakUp</div><div class="avatar">G</div></div><h1>Good evening, Gold.</h1><div class="muted">A little practice. A better speaker.</div>
+<section id="home" class="screen"><div class="top"><div class="logo">SpeakUp</div><div class="avatar">G</div></div><h1>Good evening, Gold.</h1><div class="muted">A little practice. A better speaker.</div>
 <div class="hero"><div class="eyebrow">TODAY'S CHALLENGE · 90 SEC</div><h2 id="dailyTitle">Do we need talent to succeed?</h2><p id="dailyDesc">Take a position and defend it with one strong example.</p><button class="btn" onclick="startChallenge()">Start speaking →</button></div>
 <div class="section">Your progress</div><div class="stats"><div class="stat"><b id="avg">8.0</b><span>Average</span></div><div class="stat"><b id="streak">3</b><span>Day streak</span></div><div class="stat"><b id="xp">420</b><span>XP</span></div></div>
 <div class="section">Practice</div><div class="grid">
@@ -118,24 +118,40 @@ function updateStats(){const h=JSON.parse(localStorage.getItem('speakupHistory')
 function openPractice(type){startTopic(type+' practice: '+prompts[Math.floor(Math.random()*prompts.length)])}
 function sim(type){currentPrompt=type+' simulator';$('prompt').textContent=type+' simulator: '+(type==='Interview'?'Tell me about yourself and what you are working toward.':type==='Negotiation'?'You need to convince someone to accept your proposal. Make your opening case.':type==='Small talk'?'You just met someone at an event. Start a natural conversation.':'Convince a potential customer that your idea solves a real problem.');seconds=90;initialSeconds=90;$('timer').textContent='1:30';show('session')}
 updateStats();
-  const savedName = localStorage.getItem('userName');
+ const savedName = localStorage.getItem('userName');
+const onboardingComplete = localStorage.getItem('onboardingComplete') === 'true';
 
-if (savedName) {
+function updateUserUI(name) {
   const profileName = document.getElementById('profileName');
-  const avatar = document.querySelector('#profile .avatar');
+  const profileAvatar = document.querySelector('#profile .avatar');
+  const homeAvatar = document.querySelector('#home .avatar');
+  const homeHeading = document.querySelector('#home h1');
 
-  if (profileName) profileName.textContent = savedName;
-  if (avatar) avatar.textContent = savedName.charAt(0).toUpperCase();
+  if (profileName) profileName.textContent = name;
+  if (profileAvatar) profileAvatar.textContent = name.charAt(0).toUpperCase();
+  if (homeAvatar) homeAvatar.textContent = name.charAt(0).toUpperCase();
+  if (homeHeading) homeHeading.textContent = `Good evening, ${name}.`;
 }
-  const onboarding = document.getElementById('onboarding');
-const finishOnboarding = document.getElementById('finishOnboarding');
 
 function showOnboarding() {
-  onboarding.classList.add('active');
-  document.querySelectorAll('.screen:not(#onboarding)').forEach(screen => {
+  document.querySelectorAll('.screen').forEach(screen => {
     screen.classList.remove('active');
   });
+
+  document.getElementById('onboarding').classList.add('active');
+  document.querySelector('.nav').style.display = 'none';
 }
+
+function showHome() {
+  document.querySelectorAll('.screen').forEach(screen => {
+    screen.classList.remove('active');
+  });
+
+  document.getElementById('home').classList.add('active');
+  document.querySelector('.nav').style.display = 'block';
+}
+
+const finishOnboarding = document.getElementById('finishOnboarding');
 
 finishOnboarding.addEventListener('click', () => {
   const name = document.getElementById('userName').value.trim();
@@ -164,13 +180,14 @@ finishOnboarding.addEventListener('click', () => {
   localStorage.setItem('speakingGoals', JSON.stringify(goals));
   localStorage.setItem('onboardingComplete', 'true');
 
-  const profileName = document.getElementById('profileName');
-const avatar = document.querySelector('#profile .avatar');
-
-if (profileName) profileName.textContent = name;
-if (avatar) avatar.textContent = name.charAt(0).toUpperCase();
-
-  onboarding.classList.remove('active');
-  document.getElementById('home').classList.add('active');
+  updateUserUI(name);
+  showHome();
 });
+
+if (onboardingComplete && savedName) {
+  updateUserUI(savedName);
+  showHome();
+} else {
+  showOnboarding();
+};
 </script></body></html>
