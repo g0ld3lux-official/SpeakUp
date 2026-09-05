@@ -77,4 +77,9 @@ function updateStats(){const h=JSON.parse(localStorage.getItem('speakupHistory')
 function openPractice(type){startTopic(type+' practice: '+prompts[Math.floor(Math.random()*prompts.length)])}
 function sim(type){currentPrompt=type+' simulator';$('prompt').textContent=type+' simulator: '+(type==='Interview'?'Tell me about yourself and what you are working toward.':type==='Negotiation'?'You need to convince someone to accept your proposal. Make your opening case.':type==='Small talk'?'You just met someone at an event. Start a natural conversation.':'Convince a potential customer that your idea solves a real problem.');seconds=90;initialSeconds=90;$('timer').textContent='1:30';show('session')}
 updateStats();
+  const savedName = localStorage.getItem('userName');
+if (savedName) {
+  document.getElementById('profileName').textContent = savedName;
+  document.querySelector('.avatar').textContent = savedName.charAt(0).toUpperCase();
+}
 </script></body></html>
