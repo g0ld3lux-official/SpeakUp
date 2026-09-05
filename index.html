@@ -119,9 +119,13 @@ function openPractice(type){startTopic(type+' practice: '+prompts[Math.floor(Mat
 function sim(type){currentPrompt=type+' simulator';$('prompt').textContent=type+' simulator: '+(type==='Interview'?'Tell me about yourself and what you are working toward.':type==='Negotiation'?'You need to convince someone to accept your proposal. Make your opening case.':type==='Small talk'?'You just met someone at an event. Start a natural conversation.':'Convince a potential customer that your idea solves a real problem.');seconds=90;initialSeconds=90;$('timer').textContent='1:30';show('session')}
 updateStats();
   const savedName = localStorage.getItem('userName');
+
 if (savedName) {
-  document.getElementById('profileName').textContent = savedName;
-  document.querySelector('.avatar').textContent = savedName.charAt(0).toUpperCase();
+  const profileName = document.getElementById('profileName');
+  const avatar = document.querySelector('#profile .avatar');
+
+  if (profileName) profileName.textContent = savedName;
+  if (avatar) avatar.textContent = savedName.charAt(0).toUpperCase();
 }
   const onboarding = document.getElementById('onboarding');
 const finishOnboarding = document.getElementById('finishOnboarding');
@@ -160,8 +164,11 @@ finishOnboarding.addEventListener('click', () => {
   localStorage.setItem('speakingGoals', JSON.stringify(goals));
   localStorage.setItem('onboardingComplete', 'true');
 
-  document.getElementById('profileName').textContent = name;
-  document.querySelector('.avatar').textContent = name.charAt(0).toUpperCase();
+  const profileName = document.getElementById('profileName');
+const avatar = document.querySelector('#profile .avatar');
+
+if (profileName) profileName.textContent = name;
+if (avatar) avatar.textContent = name.charAt(0).toUpperCase();
 
   onboarding.classList.remove('active');
   document.getElementById('home').classList.add('active');
