@@ -4,6 +4,47 @@
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.app{max-width:540px;margin:auto;min-height:100vh;padding:22px 18px 88px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}.logo{font-weight:900;font-size:24px}.avatar{width:40px;height:40px;border-radius:50%;background:#e6e6df;display:grid;place-items:center;font-weight:800}.screen{display:none}.screen.active{display:block}h1{font-size:30px;line-height:1.08;margin:0 0 8px}.muted{color:var(--muted)}.eyebrow{font-size:11px;font-weight:800;letter-spacing:.12em;color:#777}.hero{background:#171717;color:#fff;border-radius:25px;padding:23px;margin:22px 0}.hero h2{font-size:24px;margin:8px 0}.hero p{color:#ccc;line-height:1.5}.btn{width:100%;padding:14px 16px;border-radius:15px;font-weight:800;background:#171717;color:#fff}.hero .btn{background:#fff;color:#171717}.section{font-size:18px;font-weight:850;margin:25px 0 12px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.stat,.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:15px}.stat b{font-size:21px}.stat span{display:block;font-size:11px;color:#777;margin-top:3px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.card{cursor:pointer}.card .ico{font-size:24px}.card h3{margin:9px 0 5px}.card p{font-size:13px;color:#777;line-height:1.4;margin:0}.listbtn{width:100%;background:#fff;border:1px solid var(--line);border-radius:16px;text-align:left;padding:16px;margin:5px 0}.back{background:none;color:#777;padding:0 0 18px}.prompt{background:#fff;border:1px solid var(--line);border-radius:21px;padding:22px;font-size:20px;line-height:1.4;margin-top:15px}.timer{text-align:center;font-size:62px;font-weight:900;margin:25px 0}.mic{width:88px;height:88px;border-radius:50%;display:block;margin:15px auto;background:#171717;color:#fff;font-size:29px}.center{text-align:center}.score{text-align:center;font-size:62px;font-weight:900;margin:20px}.bar{height:8px;background:#e6e6e1;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:#171717}.row{display:flex;justify-content:space-between;margin:12px 0 6px;font-size:14px}.pill{display:inline-block;background:var(--soft);border-radius:99px;padding:8px 11px;margin:3px;font-size:12px}.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.96);border-top:1px solid var(--line);z-index:10}.navin{max-width:540px;margin:auto;display:flex;justify-content:space-around;padding:9px}.nav button{background:none;color:#777;font-size:11px}.nav button.active{color:#111;font-weight:800}.ni{font-size:21px;display:block;margin-bottom:2px}.notice{padding:12px 14px;border-radius:14px;background:#eef6f1;color:#176d46;font-size:13px;margin-top:14px}
 </style></head><body>
 <div class="app">
+<section id="onboarding" class="screen active">
+  <div class="top">
+    <div class="logo">SpeakUp</div>
+  </div>
+
+  <div class="hero">
+    <div class="eyebrow">WELCOME TO SPEAKUP</div>
+    <h1>Let's build your speaking profile.</h1>
+    <p>Tell us a little about yourself so SpeakUp can personalize your practice.</p>
+  </div>
+
+  <div class="card">
+    <label for="userName">What's your name?</label>
+    <input id="userName" type="text" placeholder="Enter your name" autocomplete="name">
+
+    <label for="speakingLevel">How would you describe your speaking level?</label>
+    <select id="speakingLevel">
+      <option value="">Select one</option>
+      <option value="beginner">Beginner</option>
+      <option value="intermediate">Intermediate</option>
+      <option value="advanced">Advanced</option>
+    </select>
+
+    <div class="section">What do you want to improve?</div>
+
+    <div id="goalOptions" class="card">
+      <label><input type="checkbox" value="public speaking"> Public speaking</label>
+      <label><input type="checkbox" value="conversations"> Conversations</label>
+      <label><input type="checkbox" value="interviews"> Interviews</label>
+      <label><input type="checkbox" value="storytelling"> Storytelling</label>
+      <label><input type="checkbox" value="thinking quickly"> Thinking on your feet</label>
+      <label><input type="checkbox" value="vocabulary"> Vocabulary</label>
+      <label><input type="checkbox" value="pronunciation"> Pronunciation</label>
+      <label><input type="checkbox" value="sales"> Sales & persuasion</label>
+    </div>
+
+    <button id="finishOnboarding" class="primary">
+      Build my practice plan
+    </button>
+  </div>
+</section>
 <section id="home" class="screen active"><div class="top"><div class="logo">SpeakUp</div><div class="avatar">G</div></div><h1>Good evening, Gold.</h1><div class="muted">A little practice. A better speaker.</div>
 <div class="hero"><div class="eyebrow">TODAY'S CHALLENGE · 90 SEC</div><h2 id="dailyTitle">Do we need talent to succeed?</h2><p id="dailyDesc">Take a position and defend it with one strong example.</p><button class="btn" onclick="startChallenge()">Start speaking →</button></div>
 <div class="section">Your progress</div><div class="stats"><div class="stat"><b id="avg">8.0</b><span>Average</span></div><div class="stat"><b id="streak">3</b><span>Day streak</span></div><div class="stat"><b id="xp">420</b><span>XP</span></div></div>
@@ -82,4 +123,47 @@ if (savedName) {
   document.getElementById('profileName').textContent = savedName;
   document.querySelector('.avatar').textContent = savedName.charAt(0).toUpperCase();
 }
+  const onboarding = document.getElementById('onboarding');
+const finishOnboarding = document.getElementById('finishOnboarding');
+
+function showOnboarding() {
+  onboarding.classList.add('active');
+  document.querySelectorAll('.screen:not(#onboarding)').forEach(screen => {
+    screen.classList.remove('active');
+  });
+}
+
+finishOnboarding.addEventListener('click', () => {
+  const name = document.getElementById('userName').value.trim();
+  const level = document.getElementById('speakingLevel').value;
+
+  const goals = [...document.querySelectorAll('#goalOptions input:checked')]
+    .map(input => input.value);
+
+  if (!name) {
+    alert('Please enter your name.');
+    return;
+  }
+
+  if (!level) {
+    alert('Please select your speaking level.');
+    return;
+  }
+
+  if (goals.length === 0) {
+    alert('Choose at least one area you want to improve.');
+    return;
+  }
+
+  localStorage.setItem('userName', name);
+  localStorage.setItem('speakingLevel', level);
+  localStorage.setItem('speakingGoals', JSON.stringify(goals));
+  localStorage.setItem('onboardingComplete', 'true');
+
+  document.getElementById('profileName').textContent = name;
+  document.querySelector('.avatar').textContent = name.charAt(0).toUpperCase();
+
+  onboarding.classList.remove('active');
+  document.getElementById('home').classList.add('active');
+});
 </script></body></html>
